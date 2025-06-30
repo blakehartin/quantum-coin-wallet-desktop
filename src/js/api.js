@@ -184,15 +184,17 @@ async function postTransaction(txnApiDomain, txnData) {
         body: txnDataJson
     });
 
-    if (response == null) {
+    if (response === null) {
         throw new Error(langJson.errors.invalidApiResponse);
     }
 
-    if(response.status == 400) {
-        if (response.statusText == null) {
-            throw new Error(langJson.errors.lowGasError);
+    if(response.status === 400) {
+        let body = await response.text();
+
+        if (response.statusText === null) {
+            throw new Error(langJson.errors.lowGasError + " " + body);
         } else {
-            throw new Error(langJson.errors.lowGasError + " " + response.statusText);
+            throw new Error(langJson.errors.lowGasError + " " + response.statusText + " " + body);
         }
     }
 
